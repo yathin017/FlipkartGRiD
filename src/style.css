@@ -1,0 +1,83 @@
+*
+{
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body
+{
+    overflow: hidden;
+}
+
+.webgl
+{
+    position: fixed;
+    top: 0;
+    left: 0;
+    outline: none;
+}
+
+
+
+#MainScreenController{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-color: green;
+    height: 20vh;
+    /* width: 40vw; */
+    z-index: 1;
+    display: flex;
+    /* display: none; */
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
+.GhostIndicator{
+    position: absolute;
+    height: 40px;
+    width: 70px;
+    top: 0;
+    left: 0;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    background-color: green;
+}
+
+
+
+
+#MainScreenTitle{
+    font-size: 2em;
+    padding-bottom: 1vh;
+    font-weight: bold;
+    color: white;
+}
+
+
+#MainScreenUnderSeekBarButtons{
+    padding-top: 10px;
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 1;
+}
+
+#MainScreenSeekBarContainer{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#MainScreenSeekBar{
+    width: 90%;
+}
