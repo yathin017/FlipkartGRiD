@@ -78,11 +78,35 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 const textureLoader = new THREE.TextureLoader()
 const fbxLoader = new FBXLoader()
 
-const gltfLoader=new GLTFLoader()
 
-
-
-
+const GroundTextureBaseColor = textureLoader.load(
+    "./textures/Terracotta_Tiles/Substance_Graph_basecolor.jpg"
+  );
+  
+  const GroundTextureNormal = textureLoader.load(
+    "./textures/Terracotta_Tiles/Substance_Graph_normal.jpg"
+  );
+  
+  const GroundTextureHeight = textureLoader.load(
+    "./textures/Terracotta_Tiles/Substance_Graph_height.png"
+  );
+  
+  const GroundTextureRoughness = textureLoader.load(
+    "./textures/Terracotta_Tiles/Substance_Graph_roughness.jpg"
+  );
+  
+  GroundTextureBaseColor.repeat.set(20, 20);
+  GroundTextureBaseColor.wrapS = THREE.RepeatWrapping;
+  GroundTextureBaseColor.wrapT = THREE.RepeatWrapping;
+  
+  GroundTextureNormal.repeat.set(20, 20);
+  GroundTextureNormal.wrapS = THREE.RepeatWrapping;
+  GroundTextureNormal.wrapT = THREE.RepeatWrapping;
+  
+  GroundTextureRoughness.repeat.set(20, 20);
+  GroundTextureRoughness.wrapS = THREE.RepeatWrapping;
+  GroundTextureRoughness.wrapT = THREE.RepeatWrapping;
+  
 
 
 
@@ -92,7 +116,7 @@ const gltfLoader=new GLTFLoader()
 //Testing Space
 const theater=new THREE.Group()
 scene.add(theater)
-theater.position.set(0,-0.7,-15)
+theater.position.set(0,1,-15)
 const theaterGUI={
     scale:1,
 }
@@ -102,15 +126,10 @@ const theaterGUI={
 //     theater.add(object)
 // })
 
-// fbxLoader.load('./City/combined.fbx',(object)=>{
-//     object.scale.set(0.0049,0.005,0.00485)
-//     theater.add(object)
-// })
-
-
-gltfLoader.load('./models/C1.glb',(object)=>{
-    // object.scale.set(0.0049,0.005,0.00485)
-    theater.add(object['scene']['children'][0])
+fbxLoader.load('./City/combined1.fbx',(object)=>{
+    object.scale.set(0.0049,0.005,0.00485)
+    console.log(object)
+    theater.add(object)
 })
 
 
@@ -281,10 +300,13 @@ onValue(ref(database,"Rooms/"+RoomID+"/"+'VideoPlayer/currentTime'),(snapshot)=>
 /**
  * Object
  */
-const FloorGeometry = new THREE.PlaneBufferGeometry(1000, 1000)
-const FloorMaterial = new THREE.MeshPhongMaterial({
+const FloorGeometry = new THREE.PlaneBufferGeometry(100, 100)
+const FloorMaterial = new THREE.MeshStandardMaterial({
     color: 0xffffff,
-    side: THREE.DoubleSide
+    side: THREE.DoubleSide,
+    map: GroundTextureBaseColor,
+    normalMap: GroundTextureNormal,
+    roughnessMap: GroundTextureRoughness,
 })
 const Floor= new THREE.Mesh(FloorGeometry, FloorMaterial)
 Floor.position.y=-0.1
@@ -299,8 +321,12 @@ scene.add(Floor)
 const LightGUI={
     ambientLight:{
         color:0xffffff,
+    },
+    hemiLight:{
+        color:0xffffff,
     }
 }
+
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.5)
 scene.add(ambientLight)
 const ambientLightGUI=gui.addFolder('Ambient Light')
@@ -310,6 +336,14 @@ ambientLightGUI.addColor(LightGUI.ambientLight,'color').onChange((val)=>{
 )
 ambientLightGUI.add(ambientLight,'intensity',0,2,0.001)
 
+const hemiLight=new THREE.HemisphereLight(0xffffff,0xffffff,0.5)
+scene.add(hemiLight)
+const hemiLightGUI=gui.addFolder('Hemi Light')
+hemiLightGUI.addColor(LightGUI.hemiLight,'color').onChange((val)=>{
+    hemiLight.color.set(val)
+    }
+)
+hemiLightGUI.add(hemiLight,'intensity',0,2,0.001)
 
 
 
@@ -516,8 +550,6 @@ function loadingComplete(){
             for(const playerID in snapshot.val()){
                 if(playerID==selfid){
                     mainPlayerStatsUpdate.CharacterType=snapshot.val()[playerID].CharacterType
-                    console.log(mainPlayerStatsUpdate.CharacterType)
-                    console.log(snapshot.val()[playerID].CharacterType)
                     mainPlayerStatsUpdate.transform.position=snapshot.val()[playerID].transform.position
                     mainPlayerStatsUpdate.transform.rotation=snapshot.val()[playerID].transform.rotation
                     mainPlayerStatsUpdate.canmove=snapshot.val()[playerID].canmove
