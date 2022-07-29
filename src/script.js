@@ -116,7 +116,8 @@ const GroundTextureBaseColor = textureLoader.load(
 //Testing Space
 const theater=new THREE.Group()
 scene.add(theater)
-theater.position.set(0,1,-15)
+theater.position.set(100,0,-15)
+theater.scale.set(0.3,0.3,0.3)
 const theaterGUI={
     scale:1,
 }
@@ -126,9 +127,15 @@ const theaterGUI={
 //     theater.add(object)
 // })
 
-fbxLoader.load('./City/combined1.fbx',(object)=>{
-    object.scale.set(0.0049,0.005,0.00485)
-    console.log(object)
+fbxLoader.load('./City/combined4.fbx',(object)=>{
+    object.scale.set(0.005,0.005,0.005)
+    // cast shadow
+    object.traverse(function(child) {
+        if (child.isMesh) {
+            child.castShadow = true;
+            child.receiveShadow = true;
+        }
+    })
     theater.add(object)
 })
 
@@ -140,9 +147,9 @@ const TheterGUIFolder=gui.addFolder('Theater')
 TheterGUIFolder.add(theaterGUI,'scale',0,1).onChange(()=>{
     theater.scale.set(theaterGUI.scale,theaterGUI.scale,theaterGUI.scale)
 })
-TheterGUIFolder.add(theater.position,'x',-50,50,0.001)
-TheterGUIFolder.add(theater.position,'y',-50,50,0.001)
-TheterGUIFolder.add(theater.position,'z',-50,50,0.001)
+TheterGUIFolder.add(theater.position,'x',-3000,3000,0.001)
+TheterGUIFolder.add(theater.position,'y',-3000,3000,0.001)
+TheterGUIFolder.add(theater.position,'z',-3000,3000,0.001)
 TheterGUIFolder.add(theater.rotation,'x',-Math.PI,Math.PI,0.001)
 TheterGUIFolder.add(theater.rotation,'y',-Math.PI,Math.PI,0.001)
 TheterGUIFolder.add(theater.rotation,'z',-Math.PI,Math.PI,0.001)
@@ -324,10 +331,25 @@ const LightGUI={
     },
     hemiLight:{
         color:0xffffff,
+    },
+    directionalLight:{
+        color:0xffffff,
+    },
+    pointLight1:{
+        color:0xffffff,
+    },
+    pointLight2:{
+        color:0xffffff,
+    },
+    pointLight3:{
+        color:0xffffff,
+    },
+    pointLight4:{
+        color:0xffffff,
     }
 }
 
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.5)
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.1)
 scene.add(ambientLight)
 const ambientLightGUI=gui.addFolder('Ambient Light')
 ambientLightGUI.addColor(LightGUI.ambientLight,'color').onChange((val)=>{
@@ -336,7 +358,7 @@ ambientLightGUI.addColor(LightGUI.ambientLight,'color').onChange((val)=>{
 )
 ambientLightGUI.add(ambientLight,'intensity',0,2,0.001)
 
-const hemiLight=new THREE.HemisphereLight(0xffffff,0xffffff,0.5)
+const hemiLight=new THREE.HemisphereLight(0xffffff,0xffffff,0.1)
 scene.add(hemiLight)
 const hemiLightGUI=gui.addFolder('Hemi Light')
 hemiLightGUI.addColor(LightGUI.hemiLight,'color').onChange((val)=>{
@@ -344,6 +366,56 @@ hemiLightGUI.addColor(LightGUI.hemiLight,'color').onChange((val)=>{
     }
 )
 hemiLightGUI.add(hemiLight,'intensity',0,2,0.001)
+
+
+const pointLightGUIMain=gui.addFolder('Point Light')
+
+for(let i=1;i<=4;i++){
+    const pointLight=new THREE.PointLight(0xffffff,0)
+    scene.add(pointLight)
+    const pointLightHelper=new THREE.PointLightHelper(pointLight,1)
+    scene.add(pointLightHelper)
+    const pointLightGUI=pointLightGUIMain.addFolder('Point Light '+i)
+    pointLightGUI.addColor(LightGUI['pointLight'+i],'color').onChange((val)=>{
+        pointLight.color.set(val)
+        }
+    )
+    pointLightGUI.add(pointLight,'intensity',0,2,0.001)
+    pointLightGUI.add(pointLight,'distance',0,100,0.001)
+    pointLightGUI.add(pointLight,'decay',0,2,0.001)
+    pointLightGUI.add(pointLight.position,'x',-100,100,0.001)
+    pointLightGUI.add(pointLight.position,'y',-100,100,0.001)
+    pointLightGUI.add(pointLight.position,'z',-100,100,0.001)
+    if(i==1){
+        pointLightGUI.open()
+        pointLight.position.set(-1.5,2,-13)
+        pointLight.intensity=0.58
+        pointLight.decay=1.4
+        pointLight.distance=12.3
+    }
+
+
+}
+
+
+const directionalLight=new THREE.DirectionalLight(0xffffff,0.2)
+scene.add(directionalLight)
+const directionalLightGUI=gui.addFolder('Directional Light')
+directionalLightGUI.addColor(LightGUI.directionalLight,'color').onChange((val)=>{
+    directionalLight.color.set(val)
+    }
+)
+directionalLightGUI.add(directionalLight,'intensity',0,2,0.001)
+directionalLightGUI.add(directionalLight.position,'x',-100,100,0.001)
+directionalLightGUI.add(directionalLight.position,'y',-100,100,0.001)
+directionalLightGUI.add(directionalLight.position,'z',-100,100,0.001)
+
+
+
+
+
+
+
 
 
 
