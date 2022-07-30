@@ -292,6 +292,55 @@ TheterGUIFolder.add(theater.rotation,'z',-Math.PI,Math.PI,0.001)
 //Testing Space
 
 
+// Hoodie
+
+const hoodie=new THREE.Group()
+hoodie.position.set(-4.28,1.1,-12.3)
+hoodie.scale.set(0.017,0.017,0.017)
+hoodie.rotation.set(0,Math.PI,0)
+scene.add(hoodie)
+fbxLoader.load('./Items/Hoodie.fbx',(object)=>{
+    hoodie.add(object)
+})
+
+const hoodieGUIHelper={
+    scale:1,
+}
+const hoodieGUI=gui.addFolder('Hoodie')
+hoodieGUI.add(hoodie.position,'x',-300,300,0.001)
+hoodieGUI.add(hoodie.position,'y',-300,300,0.001)
+hoodieGUI.add(hoodie.position,'z',-300,300,0.001)
+hoodieGUI.add(hoodie.rotation,'x',-Math.PI,Math.PI,0.001)
+hoodieGUI.add(hoodie.rotation,'y',-Math.PI,Math.PI,0.001)
+hoodieGUI.add(hoodie.rotation,'z',-Math.PI,Math.PI,0.001)
+hoodieGUI.add(hoodieGUIHelper,'scale',0.0001,0.5,0.001).onChange(()=>{
+    hoodie.scale.set(hoodieGUIHelper.scale,hoodieGUIHelper.scale,hoodieGUIHelper.scale)
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
