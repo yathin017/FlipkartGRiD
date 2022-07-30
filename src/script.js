@@ -82,19 +82,7 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 //Loading
 const textureLoader = new THREE.TextureLoader()
 const fbxLoader = new FBXLoader()
-// const cubeTextureLoader= new THREE.CubeTextureLoader()
-// const cubeTexture = cubeTextureLoader.load([
-//     './textures/environmentMaps/4/px.jpg',
-//     './textures/environmentMaps/4/nx.jpg',
-//     './textures/environmentMaps/4/py.jpg',
-//     './textures/environmentMaps/4/ny.jpg',
-//     './textures/environmentMaps/4/pz.jpg',
-//     './textures/environmentMaps/4/nz.jpg'
-// ])
-
-// scene.background=cubeTexture;
-
-
+const fontLoader=new THREE.FontLoader()
 
 // Sky
 let sky,sun
@@ -208,10 +196,58 @@ const repval=200
 
 
 
+// Text
+// Group
+const MetaKartText=new THREE.Group()
+MetaKartText.position.set(12,7,-25.5)
+MetaKartText.rotation.set(0,-1.6,0)
+MetaKartText.scale.set(4,4,4)
+scene.add(MetaKartText)
+fontLoader.load(
+    "./fonts/helvetiker_regular.typeface.json",
+    function (response) {
+      const textGeo = new THREE.TextGeometry("Metakart", {
+        font: response,
+        size: 0.6,
+        height: 0.1,
+        curveSegments: 12,
+        bevelEnabled: true,
+        bevelThickness: 0.05,
+        bevelSize: 0.01,
+        bevelSegments: 5,
+      });
+      textGeo.computeBoundingBox();
+      textGeo.computeVertexNormals();
+      const centerOffset =-0.5 * (textGeo.boundingBox.max.x - textGeo.boundingBox.min.x);
+      const textMaterial = new THREE.MeshNormalMaterial();
+      const textMesh = new THREE.Mesh(textGeo, textMaterial);
+      textMesh.position.x = centerOffset;
+      MetaKartText.add(textMesh);
+    }
+  );
+
+//   Gui
+const MetaKartHelper={
+    scale:1,
+}
+const MetaKartGUI=gui.addFolder('MetaKart Text')
+MetaKartGUI.add(MetaKartText.position,'x',-100,100,0.1)
+MetaKartGUI.add(MetaKartText.position,'y',-100,100,0.1)
+MetaKartGUI.add(MetaKartText.position,'z',-100,100,0.1)
+MetaKartGUI.add(MetaKartText.rotation,'x',-Math.PI,Math.PI,0.1)
+MetaKartGUI.add(MetaKartText.rotation,'y',-Math.PI,Math.PI,0.1)
+MetaKartGUI.add(MetaKartText.rotation,'z',-Math.PI,Math.PI,0.1)
+MetaKartGUI.add(MetaKartHelper,'scale',0.1,10,0.1).onChange(()=>{
+    MetaKartText.scale.set(MetaKartHelper.scale,MetaKartHelper.scale,MetaKartHelper.scale)
+})
 
 
 
-//Testing Space
+
+
+
+
+//Theater Space
 const theater=new THREE.Group()
 scene.add(theater)
 theater.position.set(100,-0.2,-15)
@@ -277,9 +313,27 @@ const screenMaterial = new THREE.MeshBasicMaterial({
     side : THREE.DoubleSide,
 })
 const screenMesh = new THREE.Mesh(screenGeometry, screenMaterial)
-screenMesh.position.set(0, 5, 15)
-screenMesh.rotation.set(Math.PI, 0, Math.PI)
+screenMesh.position.set(13.8, 7.5, -14)
+screenMesh.rotation.set(Math.PI, -Math.PI/2, Math.PI)
+screenMesh.scale.set(0.4,0.4,0.4)
 scene.add(screenMesh)
+
+const screenGuiHelper={
+    scale:1,
+}
+const screenGUI=gui.addFolder('Screen')
+screenGUI.add(screenMesh.position,'x',-100,100,0.001)
+screenGUI.add(screenMesh.position,'y',-100,100,0.001)
+screenGUI.add(screenMesh.position,'z',-100,100,0.001)
+screenGUI.add(screenMesh.rotation,'x',-Math.PI,Math.PI,0.001)
+screenGUI.add(screenMesh.rotation,'y',-Math.PI,Math.PI,0.001)
+screenGUI.add(screenMesh.rotation,'z',-Math.PI,Math.PI,0.001)
+screenGUI.add(screenGuiHelper,'scale',0.1,10,0.001).onChange(()=>{
+    screenMesh.scale.set(screenGuiHelper.scale,screenGuiHelper.scale,screenGuiHelper.scale)
+})
+
+
+
 
 
 //Screen
@@ -527,7 +581,7 @@ for(let i=1;i<=4;i++){
 
 
 const spotLightGUIMain=gui.addFolder('SpotLight')
-for(let i=1;i<=4;i++){
+for(let i=1;i<=1;i++){
     const spotLight=new THREE.SpotLight(0xffffff,0)
     scene.add(spotLight)
     scene.add(spotLight.target)
