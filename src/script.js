@@ -8,6 +8,7 @@ import gsap from 'gsap';
 import * as dat from 'dat.gui'
 import {database ,ref,onValue,set} from './SideScripts/FirebaseSetup.js'
 import { update } from 'firebase/database';
+import { SpotLight } from 'three'
 
 const RoomID="1"
 const selfid='p4'
@@ -346,7 +347,19 @@ const LightGUI={
     },
     pointLight4:{
         color:0xffffff,
-    }
+    },
+    spotLight1:{
+        color:0xffffff,
+    },
+    spotLight2:{
+        color:0xffffff,
+    },
+    spotLight3:{
+        color:0xffffff,
+    },
+    spotLight4:{
+        color:0xffffff,
+    },
 }
 
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.1)
@@ -387,15 +400,71 @@ for(let i=1;i<=4;i++){
     pointLightGUI.add(pointLight.position,'y',-100,100,0.001)
     pointLightGUI.add(pointLight.position,'z',-100,100,0.001)
     if(i==1){
-        pointLightGUI.open()
-        pointLight.position.set(-1.5,2,-13)
+        pointLight.position.set(-1.5,4,-13.5)
         pointLight.intensity=0.58
         pointLight.decay=1.4
         pointLight.distance=12.3
     }
+    if(i==2){
+        pointLight.position.set(-7,3,-13)
+        pointLight.intensity=0.6
+        pointLight.decay=1
+        pointLight.distance=30
+    }
+    if(i==3){
+        pointLight.position.set(-13,4,-42)
+        pointLight.intensity=1.3
+        pointLight.decay=1
+        pointLight.distance=11
+    }
+    if(i==4){
+        pointLight.position.set(-13,4,-42)
+        pointLight.intensity=1.3
+        pointLight.decay=1
+        pointLight.distance=11
+    }
+}
 
+
+const spotLightGUIMain=gui.addFolder('SpotLight')
+for(let i=1;i<=4;i++){
+    const spotLight=new THREE.SpotLight(0xffffff,0)
+    scene.add(spotLight)
+    scene.add(spotLight.target)
+    const spotLightHelper=new THREE.SpotLightHelper(spotLight,1)
+    scene.add(spotLightHelper)
+    const spotLightGUI=spotLightGUIMain.addFolder('SpotLight '+i)
+    spotLightGUI.addColor(LightGUI['spotLight'+i],'color').onChange((val)=>{
+        spotLight.color.set(val)
+        }
+    )
+    spotLightGUI.add(spotLight,'intensity',0,2,0.001)
+    spotLightGUI.add(spotLight,'distance',0,100,0.001)
+    spotLightGUI.add(spotLight,'decay',0,2,0.001)
+    spotLightGUI.add(spotLight.position,'x',-100,100,0.001)
+    spotLightGUI.add(spotLight.position,'y',-100,100,0.001)
+    spotLightGUI.add(spotLight.position,'z',-100,100,0.001)
+    spotLightGUI.add(spotLight,'angle',-Math.PI,Math.PI/2,0.001)
+    spotLightGUI.add(spotLight,'penumbra',0,1,0.001)
+    spotLightGUI.add(spotLight.target.position,'x',-100,100,0.001).name('Target X').onChange((val)=>{
+        spotLight.target.position.x=val
+    })
+    spotLightGUI.add(spotLight.target.position,'y',-100,100,0.001).name('Target Y').onChange((val)=>{
+        spotLight.target.position.y=val
+    })
+    spotLightGUI.add(spotLight.target.position,'z',-100,100,0.001).name('Target Z').onChange((val)=>{
+        spotLight.target.position.z=val
+    })
 
 }
+
+
+
+
+
+
+
+
 
 
 const directionalLight=new THREE.DirectionalLight(0xffffff,0.2)
@@ -409,9 +478,6 @@ directionalLightGUI.add(directionalLight,'intensity',0,2,0.001)
 directionalLightGUI.add(directionalLight.position,'x',-100,100,0.001)
 directionalLightGUI.add(directionalLight.position,'y',-100,100,0.001)
 directionalLightGUI.add(directionalLight.position,'z',-100,100,0.001)
-
-
-
 
 
 
