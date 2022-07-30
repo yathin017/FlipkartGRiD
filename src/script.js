@@ -261,7 +261,7 @@ const theaterGUI={
 //     theater.add(object)
 // })
 
-fbxLoader.load('./City/combined4.fbx',(object)=>{
+fbxLoader.load('./City/combinedx.fbx',(object)=>{
     object.scale.set(0.005,0.005,0.005)
     // Material double sided and cast shadows
     object.traverse(function(child) {
@@ -319,6 +319,26 @@ hoodieGUI.add(hoodieGUIHelper,'scale',0.0001,0.5,0.001).onChange(()=>{
 
 
 
+const Laptop=new THREE.Group()
+scene.add(Laptop)
+fbxLoader.load('./Items/Laptop.fbx',(object)=>{
+    console.log(object)
+    Laptop.add(object)
+})
+
+const laptopGUIHelper={
+    scale:1,
+}
+const laptopGUI=gui.addFolder('Laptop')
+laptopGUI.add(Laptop.position,'x',-300,300,0.001)
+laptopGUI.add(Laptop.position,'y',-300,300,0.001)
+laptopGUI.add(Laptop.position,'z',-300,300,0.001)
+laptopGUI.add(Laptop.rotation,'x',-Math.PI,Math.PI,0.001)
+laptopGUI.add(Laptop.rotation,'y',-Math.PI,Math.PI,0.001)
+laptopGUI.add(Laptop.rotation,'z',-Math.PI,Math.PI,0.001)
+laptopGUI.add(laptopGUIHelper,'scale',0.0001,100,0.001).onChange(()=>{
+    Laptop.scale.set(laptopGUIHelper.scale,laptopGUIHelper.scale,laptopGUIHelper.scale)
+})
 
 
 
