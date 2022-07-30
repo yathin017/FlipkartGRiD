@@ -2,13 +2,13 @@ import './style.css'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import {FBXLoader} from 'three/examples/jsm/loaders/FBXLoader'
-import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader'
 import * as SkeletonUtils from 'three/examples/jsm/utils/SkeletonUtils.js';
 import gsap from 'gsap';
 import * as dat from 'dat.gui'
 import {database ,ref,onValue,set} from './SideScripts/FirebaseSetup.js'
 import { update } from 'firebase/database';
-import { SpotLight } from 'three'
+// import sky
+import { Sky } from 'three/examples/jsm/objects/Sky.js'
 
 const RoomID="1"
 const selfid='p4'
@@ -50,6 +50,9 @@ window.addEventListener('resize', () =>
     // Update renderer
     renderer.setSize(sizes.width, sizes.height)
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+    renderer.outputEncoding = THREE.sRGBEncoding;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 0.5;
 })
 
 /**
@@ -72,12 +75,103 @@ controls.enableDamping = true
 const renderer = new THREE.WebGLRenderer({
     canvas: canvas
 })
+renderer.shadowMap.enabled = true;
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
 //Loading
 const textureLoader = new THREE.TextureLoader()
 const fbxLoader = new FBXLoader()
+// const cubeTextureLoader= new THREE.CubeTextureLoader()
+// const cubeTexture = cubeTextureLoader.load([
+//     './textures/environmentMaps/4/px.jpg',
+//     './textures/environmentMaps/4/nx.jpg',
+//     './textures/environmentMaps/4/py.jpg',
+//     './textures/environmentMaps/4/ny.jpg',
+//     './textures/environmentMaps/4/pz.jpg',
+//     './textures/environmentMaps/4/nz.jpg'
+// ])
+
+// scene.background=cubeTexture;
+
+
+
+// Sky
+let sky,sun
+
+function initSky() {
+
+    // Add Sky
+    sky = new Sky();
+    sky.scale.setScalar( 450000 );
+    scene.add( sky );
+
+    sun = new THREE.Vector3();
+
+    /// GUI
+
+    const effectController = {
+        turbidity: 6.5,
+        rayleigh: 3,
+        mieCoefficient: 0.005,
+        mieDirectionalG: 0.7,
+        elevation: 1.3,
+        azimuth: 180,
+        exposure: renderer.toneMappingExposure
+    };
+
+    function guiChanged() {
+
+        const uniforms = sky.material.uniforms;
+        uniforms[ 'turbidity' ].value = effectController.turbidity;
+        uniforms[ 'rayleigh' ].value = effectController.rayleigh;
+        uniforms[ 'mieCoefficient' ].value = effectController.mieCoefficient;
+        uniforms[ 'mieDirectionalG' ].value = effectController.mieDirectionalG;
+
+        const phi = THREE.MathUtils.degToRad( 90 - effectController.elevation );
+        const theta = THREE.MathUtils.degToRad( effectController.azimuth );
+
+        sun.setFromSphericalCoords( 1, phi, theta );
+
+        uniforms[ 'sunPosition' ].value.copy( sun );
+
+        renderer.toneMappingExposure = effectController.exposure;
+        renderer.render( scene, camera );
+
+    }
+
+    const guiSky = gui.addFolder( 'Sky' );
+
+    guiSky.add( effectController, 'turbidity', 0.0, 20.0, 0.1 ).onChange( guiChanged );
+    guiSky.add( effectController, 'rayleigh', 0.0, 4, 0.001 ).onChange( guiChanged );
+    guiSky.add( effectController, 'mieCoefficient', 0.0, 0.1, 0.001 ).onChange( guiChanged );
+    guiSky.add( effectController, 'mieDirectionalG', 0.0, 1, 0.001 ).onChange( guiChanged );
+    guiSky.add( effectController, 'elevation', 0, 90, 0.1 ).onChange( guiChanged );
+    guiSky.add( effectController, 'azimuth', - 180, 180, 0.1 ).onChange( guiChanged );
+    guiSky.add( effectController, 'exposure', 0, 1, 0.0001 ).onChange( guiChanged );
+
+    guiChanged();
+
+}
+
+
+
+
+
+
+initSky()
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 const GroundTextureBaseColor = textureLoader.load(
@@ -96,15 +190,18 @@ const GroundTextureBaseColor = textureLoader.load(
     "./textures/Terracotta_Tiles/Substance_Graph_roughness.jpg"
   );
   
-  GroundTextureBaseColor.repeat.set(20, 20);
+
+const repval=200
+
+  GroundTextureBaseColor.repeat.set(repval, repval);
   GroundTextureBaseColor.wrapS = THREE.RepeatWrapping;
   GroundTextureBaseColor.wrapT = THREE.RepeatWrapping;
   
-  GroundTextureNormal.repeat.set(20, 20);
+  GroundTextureNormal.repeat.set(repval, repval);
   GroundTextureNormal.wrapS = THREE.RepeatWrapping;
   GroundTextureNormal.wrapT = THREE.RepeatWrapping;
   
-  GroundTextureRoughness.repeat.set(20, 20);
+  GroundTextureRoughness.repeat.set(repval, repval);
   GroundTextureRoughness.wrapS = THREE.RepeatWrapping;
   GroundTextureRoughness.wrapT = THREE.RepeatWrapping;
   
@@ -117,7 +214,7 @@ const GroundTextureBaseColor = textureLoader.load(
 //Testing Space
 const theater=new THREE.Group()
 scene.add(theater)
-theater.position.set(100,0,-15)
+theater.position.set(100,-0.2,-15)
 theater.scale.set(0.3,0.3,0.3)
 const theaterGUI={
     scale:1,
@@ -130,13 +227,14 @@ const theaterGUI={
 
 fbxLoader.load('./City/combined4.fbx',(object)=>{
     object.scale.set(0.005,0.005,0.005)
-    // cast shadow
+    // Material double sided and cast shadows
     object.traverse(function(child) {
         if (child.isMesh) {
-            child.castShadow = true;
+            // child.castShadow = true;
             child.receiveShadow = true;
+            // child.material.side = THREE.DoubleSide;
         }
-    })
+    });
     theater.add(object)
 })
 
@@ -308,7 +406,7 @@ onValue(ref(database,"Rooms/"+RoomID+"/"+'VideoPlayer/currentTime'),(snapshot)=>
 /**
  * Object
  */
-const FloorGeometry = new THREE.PlaneBufferGeometry(100, 100)
+const FloorGeometry = new THREE.PlaneBufferGeometry(1000, 1000)
 const FloorMaterial = new THREE.MeshStandardMaterial({
     color: 0xffffff,
     side: THREE.DoubleSide,
@@ -317,6 +415,7 @@ const FloorMaterial = new THREE.MeshStandardMaterial({
     roughnessMap: GroundTextureRoughness,
 })
 const Floor= new THREE.Mesh(FloorGeometry, FloorMaterial)
+Floor.receiveShadow = true
 Floor.position.y=-0.1
 Floor.rotation.x = -Math.PI / 2
 scene.add(Floor)
@@ -385,6 +484,7 @@ const pointLightGUIMain=gui.addFolder('Point Light')
 
 for(let i=1;i<=4;i++){
     const pointLight=new THREE.PointLight(0xffffff,0)
+    pointLight.castShadow=true
     scene.add(pointLight)
     const pointLightHelper=new THREE.PointLightHelper(pointLight,1)
     scene.add(pointLightHelper)
@@ -407,13 +507,13 @@ for(let i=1;i<=4;i++){
     }
     if(i==2){
         pointLight.position.set(-7,3,-13)
-        pointLight.intensity=0.6
+        pointLight.intensity=1.56
         pointLight.decay=1
         pointLight.distance=30
     }
     if(i==3){
         pointLight.position.set(-13,4,-42)
-        pointLight.intensity=1.3
+        pointLight.intensity=0.36
         pointLight.decay=1
         pointLight.distance=11
     }
@@ -467,7 +567,17 @@ for(let i=1;i<=4;i++){
 
 
 
-const directionalLight=new THREE.DirectionalLight(0xffffff,0.2)
+const directionalLight=new THREE.DirectionalLight(0xffffff,0.781)
+directionalLight.position.set(-2.005,3.142,0.489)
+
+// directionalLight.castShadow=true
+// directionalLight.shadow.mapSize.width=1024
+// directionalLight.shadow.mapSize.height=1024
+
+
+
+
+
 scene.add(directionalLight)
 const directionalLightGUI=gui.addFolder('Directional Light')
 directionalLightGUI.addColor(LightGUI.directionalLight,'color').onChange((val)=>{
@@ -475,9 +585,9 @@ directionalLightGUI.addColor(LightGUI.directionalLight,'color').onChange((val)=>
     }
 )
 directionalLightGUI.add(directionalLight,'intensity',0,2,0.001)
-directionalLightGUI.add(directionalLight.position,'x',-100,100,0.001)
-directionalLightGUI.add(directionalLight.position,'y',-100,100,0.001)
-directionalLightGUI.add(directionalLight.position,'z',-100,100,0.001)
+directionalLightGUI.add(directionalLight.position,'x',-Math.PI,Math.PI,0.001)
+directionalLightGUI.add(directionalLight.position,'y',-Math.PI,Math.PI,0.001)
+directionalLightGUI.add(directionalLight.position,'z',-Math.PI,Math.PI,0.001)
 
 
 
@@ -608,6 +718,12 @@ const modelCountTotal = Object.values(modelUrl).length
 for(const modelName in modelUrl){
     fbxLoader.load(modelUrl[modelName],
     (model) => {
+        model.traverse((child) => {
+            if (child.isMesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+            }
+        })
         models[modelName] = model
         model.scale.set(0.01, 0.01, 0.01)
         checkProgress('models')
