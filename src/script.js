@@ -623,9 +623,6 @@ let mainPlayerStatsUpdate={
         value:false
     },
     canmove:true,
-    // isGhosting: {
-    //     value: false
-    // },
     action: {
         Idle: {value:0},
         Jump: {value:0},
@@ -661,26 +658,6 @@ const actions={}
 const models={};
 
 //working model name ELY_K_ATIENZA
-// const modelUrl = {
-//     type1:"./models/Player/mainPlayer.fbx",
-//     // type2:"./Characters/F/F.fbx",
-// };
-
-// const actionUrL = {
-//     Idle:"./models/Player/Animations/Idle.fbx",
-//     Jump:"./models/Player/Animations/Jump.fbx",
-//     Left:"./models/Player/Animations/Left.fbx",
-//     LeftTurn:"./models/Player/Animations/LeftTurn.fbx",
-//     Right:"./models/Player/Animations/Right.fbx",
-//     RightTurn:"./models/Player/Animations/RightTurn.fbx",
-//     Run:"./models/Player/Animations/Run.fbx",
-//     SitIdle:"./models/Player/Animations/SittingIdle.fbx",
-//     DefusedSitToStand:"./models/Player/Animations/SitToStand.fbx",
-//     DefusedStandToSit:"./models/Player/Animations/StandToSit.fbx",
-//     WalkingB:"./models/Player/Animations/WalkingB.fbx",
-//     WalkingF:"./models/Player/Animations/WalkingF.fbx",
-// };
-
 
 const modelUrl = {
     type1:"./Characters/M_Original/M_Original.fbx",
@@ -877,6 +854,43 @@ function loadingComplete(){
     )
 }
 
+// model url names
+const modelNames = ["type1","type2","type3"]
+let currchar="type1"
+
+function changeCharacter(){
+    currchar=modelNames[(modelNames.indexOf(currchar)+1)%modelNames.length]
+    scene.remove(mainPlayer)
+    mainPlayer=SkeletonUtils.SkeletonUtils.clone(models[currchar])
+    mainPlayer.position.set(mainPlayerStatsUpdate.transform.position.x,mainPlayerStatsUpdate.transform.position.y,mainPlayerStatsUpdate.transform.position.z)
+    mainPlayer.rotation.set(mainPlayerStatsUpdate.transform.rotation.x,mainPlayerStatsUpdate.transform.rotation.y,mainPlayerStatsUpdate.transform.rotation.z)
+    scene.add(mainPlayer)
+    mainPlayerMixer=new THREE.AnimationMixer(mainPlayer)
+    playerMixers[selfid]=mainPlayerMixer
+    for(const actionName in actions){
+        if(actionName.slice(0,7)!='Defused'){
+            mainPlayerMixer.clipAction(actions[actionName]).play()
+            mainPlayerMixer.clipAction(actions[actionName]).weight=0;
+        }
+        else{
+            mainPlayerMixer.clipAction(actions[actionName]).loop=THREE.LoopOnce;
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 const sittingGSAP={
     isSitting:false,
@@ -1057,6 +1071,10 @@ const keysPressed={}
 document.addEventListener("keydown", (event) => {
 
     keysPressed[event.key.toLowerCase()] = true;
+
+    if(event.key.toLowerCase()=='u'){
+        changeCharacter()
+    }
 
     if(event.key.toLowerCase()=='g'){
         onValue(ref(database,"Rooms/"+RoomID+"/"+'players/'+selfid+'/isGhosting'),(snapshot)=>{
