@@ -1,0 +1,261 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "D:\\Projects\\FlipkartGRiD\\frontend\\hardhat\\contracts\\Category.sol": {
+      "lastModificationDate": 1657691285081,
+      "contentHash": "ab1137cfae6cc423c0d239b19ede6323",
+      "sourceName": "contracts/Category.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./Product.sol"
+      ],
+      "versionPragmas": [
+        "0.8.4"
+      ],
+      "artifacts": [
+        "Category"
+      ]
+    },
+    "D:\\Projects\\FlipkartGRiD\\frontend\\hardhat\\contracts\\Product.sol": {
+      "lastModificationDate": 1658379585955,
+      "contentHash": "d943c81db20fe974338ea471098f4062",
+      "sourceName": "contracts/Product.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./ERC1238.sol",
+        "@openzeppelin/contracts/utils/Counters.sol"
+      ],
+      "versionPragmas": [
+        "0.8.4"
+      ],
+      "artifacts": [
+        "Product"
+      ]
+    },
+    "D:\\Projects\\FlipkartGRiD\\frontend\\hardhat\\contracts\\ERC1238.sol": {
+      "lastModificationDate": 1657691285083,
+      "contentHash": "70c1f741739d4cd63b49c97e9ae5eaa4",
+      "sourceName": "contracts/ERC1238.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./IERC1238.sol"
+      ],
+      "versionPragmas": [
+        "0.8.4"
+      ],
+      "artifacts": [
+        "ERC1238"
+      ]
+    },
+    "D:\\Projects\\FlipkartGRiD\\frontend\\hardhat\\node_modules\\@openzeppelin\\contracts\\utils\\Counters.sol": {
+      "lastModificationDate": 1657860735094,
+      "contentHash": "74654e3ae5d7f39555055dfe244dab7a",
+      "sourceName": "@openzeppelin/contracts/utils/Counters.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "Counters"
+      ]
+    },
+    "D:\\Projects\\FlipkartGRiD\\frontend\\hardhat\\contracts\\IERC1238.sol": {
+      "lastModificationDate": 1657691285084,
+      "contentHash": "ab0f0d40cf8c9f0f585ccf06b787f6bd",
+      "sourceName": "contracts/IERC1238.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.8.4"
+      ],
+      "artifacts": [
+        "IERC1238"
+      ]
+    },
+    "D:\\Projects\\FlipkartGRiD\\frontend\\hardhat\\contracts\\Company.sol": {
+      "lastModificationDate": 1657691868487,
+      "contentHash": "85a344dba12f59d9a3a3ce2ed88aa07d",
+      "sourceName": "contracts/Company.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./Category.sol"
+      ],
+      "versionPragmas": [
+        "0.8.4"
+      ],
+      "artifacts": [
+        "Company"
+      ]
+    },
+    "D:\\Projects\\FlipkartGRiD\\frontend\\hardhat\\contracts\\Flipkart.sol": {
+      "lastModificationDate": 1657732989447,
+      "contentHash": "9fc78bd95387ae9add656ce6a5554d28",
+      "sourceName": "contracts/Flipkart.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./Company.sol"
+      ],
+      "versionPragmas": [
+        "0.8.4"
+      ],
+      "artifacts": [
+        "Flipkart"
+      ]
+    }
+  }
+}
