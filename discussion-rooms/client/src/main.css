@@ -1,0 +1,23 @@
+.bgprime { 
+    background-color: #1A1A1D; 
+}
+
+.bgsec {
+    background-color: #303033;
+}
+
+.bgtert { 
+    background-color: #47474A;
+}
+
+.bgbutton,.bghead { 
+    background-color: #1474E1;
+}
+
+.fontprime { 
+    font-family: 'Merriweather', serif;
+}
+
+.fa:hover { 
+    color: wheat;
+}
