@@ -250,7 +250,7 @@ MetaKartGUI.add(MetaKartHelper,'scale',0.1,10,0.1).onChange(()=>{
 //Theater Space
 const theater=new THREE.Group()
 scene.add(theater)
-theater.position.set(100,-0.2,-15)
+theater.position.set(100,0,-15)
 theater.scale.set(0.3,0.3,0.3)
 const theaterGUI={
     scale:1,
@@ -320,15 +320,49 @@ hoodieGUI.add(hoodieGUIHelper,'scale',0.0001,0.5,0.001).onChange(()=>{
 
 
 const Laptop=new THREE.Group()
+Laptop.position.set(-6.5,1.21,-43.2)
+Laptop.scale.set(0.11,0.11,0.11)
 scene.add(Laptop)
 fbxLoader.load('./Items/Laptop.fbx',(object)=>{
-    console.log(object)
     Laptop.add(object)
 })
 
 const laptopGUIHelper={
     scale:1,
+    isSpinning:false,
+    startSpinning:()=>{
+        if(laptopGUIHelper.isSpinning!=true){
+            laptopGUIHelper.isSpinning=true
+            gsap.to(Laptop.position,{
+                duration:1,
+                y:1.4,
+                z:-43,
+                ease:'linear',
+                onComplete:()=>{
+                    gsap.to(Laptop.rotation,{
+                        duration:5,
+                        y:Math.PI*2,
+                        repeat:2,
+                        ease:'linear',
+                        onComplete:()=>{
+                            gsap.to(Laptop.position,{
+                                duration:1,
+                                y:1.21,
+                                z:-43.2,
+                                ease:'linear',
+                                onComplete:()=>{
+                                    laptopGUIHelper.isSpinning=false
+                                }
+                            })
+                        }
+                    })
+                }
+            })
+    }
+    },
+
 }
+
 const laptopGUI=gui.addFolder('Laptop')
 laptopGUI.add(Laptop.position,'x',-300,300,0.001)
 laptopGUI.add(Laptop.position,'y',-300,300,0.001)
@@ -339,6 +373,7 @@ laptopGUI.add(Laptop.rotation,'z',-Math.PI,Math.PI,0.001)
 laptopGUI.add(laptopGUIHelper,'scale',0.0001,100,0.001).onChange(()=>{
     Laptop.scale.set(laptopGUIHelper.scale,laptopGUIHelper.scale,laptopGUIHelper.scale)
 })
+laptopGUI.add(laptopGUIHelper,'startSpinning')
 
 
 
@@ -650,7 +685,7 @@ for(let i=1;i<=4;i++){
 
 
 const spotLightGUIMain=gui.addFolder('SpotLight')
-for(let i=1;i<=1;i++){
+for(let i=1;i<0;i++){
     const spotLight=new THREE.SpotLight(0xffffff,0)
     scene.add(spotLight)
     scene.add(spotLight.target)
@@ -1197,6 +1232,9 @@ document.addEventListener("keydown", (event) => {
 
     if(event.key.toLowerCase()=='u'){
         changeCharacter()
+    }
+    if(event.key.toLowerCase()=='l'){
+        laptopGUIHelper.startSpinning()
     }
 
     if(event.key.toLowerCase()=='g'){
