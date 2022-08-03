@@ -1,4 +1,4 @@
-![Metakart-1](https://user-images.githubusercontent.com/75620849/182528380-86be9f9d-06d0-4d5f-8e28-8f5636012780.png)
+![Metakart-1](https://user-images.githubusercontent.com/75620849/182532579-bb0cf6d1-ad4f-4a7f-97c2-8a94fab975f5.png)
 
 ## What is Metakart?
 MetaKart has the potential to bridge the gap between E-Commerce and In-Store Shopping. It lets you shop in virtual stores that are just as immersive as the physical world. Feel and try the products on your avatar that you're buying, and feel like you're there.
@@ -31,7 +31,7 @@ MetaKart has the potential to bridge the gap between E-Commerce and In-Store Sho
 * HTML
 * CSS
 * JavaScript
-* Thre.js
+* Three.js
 * GreenSock
 * Solidity
 * Hardhat
