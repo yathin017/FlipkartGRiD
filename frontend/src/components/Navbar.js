@@ -88,7 +88,7 @@ const Navbar = () => {
                       <span className="sr-only">Open user menu</span>
                       {x.account==null?'':<img
                         className="h-11 w-11 rounded-full"
-                        src={`https://avatars.dicebear.com/api/micah/${x.account}.svg`}
+                        src={`https://avatars.dicebear.com/api/identicon/${x.account}.svg`}
                         alt="Profile"
                       />}
                     </Menu.Button>
